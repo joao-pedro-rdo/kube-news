@@ -1,0 +1,14 @@
+# Arquivos e diretórios específicos do Node.js
+node_modules/
+npm-debug.log
+
+# Arquivos e diretórios específicos do Git
+.git/
+.gitignore
+
+# Outros arquivos e diretórios que você deseja ignorar
+logs/
+temp/
+
+# Arquivo Dockerfile
+Dockerfile
