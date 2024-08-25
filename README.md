@@ -32,3 +32,28 @@ docker container run -d -p 5432:5432 -e POSTGRES_PASSWORD=pg123 -e POSTGRES_USER
 
  `-v` -> Mapeia um volume para o container.
  - Nesse caso mapeamos o volume `kubenews_vol`(gerenciado pelo docker) para o diretório `/var/lib/postgresql/data` do container.
+
+## Para criar os containers da aplicação e do banco de dados, ultilizando linha de comando, execute os comandos abaixo:
+```shell
+#Crianndo a build da aplicação
+docker build -t joaoprdo/kube-news:v1 -f Dockerfile .
+
+#Criando a rede
+docker network create kube-news-brige
+
+#Criando o volume
+docker volume create kube-news-vol
+
+#Ciando o container do banco
+docker container run -d -p 5432:5432 --name kube-news-db -e POSTGRES_PASSWORD=pg
+123 -e POSTGRES_USER=kubenews -e POSTGRES_DB=kubenews --network kube-news-brige -v kube-news-vol:/vat/lib/postgresql/dat
+a postgres:12.17
+
+#Criando o container da aplicação:
+docker container run -d -p 8080:8080 --name kube-news-app -e DB_DATABASE=kubenews -e DB_USERNAME=kubenews -e DB_PASSWORD=pg123 -e DB_HOST=kube-news-db --network kube-news-brige joaoprdo/kube-news:v1
+```
+
+## Para criar ultilizando o docker compose, execute o comando abaixo:
+```shell
+docker-compose up -d
+```

@@ -1,0 +1,22 @@
+services:
+  kube-news-app:
+    image: joaoprdo/kube-news:v1 # tag da imagem
+    build: # buildar a imagem, especificamos que vamos buildar a imagem para levantar o container
+      context: . # caminho do dockerfile
+      dockerfile: Dockerfile # nome do dockerfile
+    container_name: kube-news-app
+    environment:
+      DB_DATABASE: kubenews
+      DB_USERNAME: kubenews
+      DB_PASSWORD: pg123
+      DB_HOST: kube-news-db
+    ports:
+      - 8080:8080
+    networks:
+      - kube-news-bridge
+
+    #* Nesse caso vamos deixar comentado pois vamos usar profiles, entao o  depends_on nao é necessario e  pode causar problemas 
+    #depends_on:
+      # Esse container depende do container do postgres
+      # Cuidar para nao criar dependecia circular 
+    #  - kube-news-db

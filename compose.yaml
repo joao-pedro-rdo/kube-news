@@ -1,0 +1,46 @@
+services:
+  kube-news-db: # nome do serviço
+    image: postgres:${POSTGRES_TAG:-12.7}    #postgres:12.17
+    container_name: kube-news-db
+    environment:
+      POSTGRES_PASSWORD: pg123
+      POSTGRES_USER: kubenews
+      POSTGRES_DB: kubenews
+    ports:
+      - 5432:5432
+    networks:
+      - kube-news-bridge
+    volumes:
+    # ./kube-news-vol:/var/lib/postgresql/data se fizer assim vai ser ind mount e vai criar um diretorio
+      - kube-news-vol:/var/lib/postgresql/data
+  kube-news-app:
+    image: joaoprdo/kube-news:${KUBE_NEWS_TAG:-v1} # tag da imagem
+    build: # buildar a imagem, especificamos que vamos buildar a imagem para levantar o container
+      context: . # caminho do dockerfile
+      dockerfile: Dockerfile # nome do dockerfile
+    container_name: kube-news-app
+    environment:
+      DB_DATABASE: kubenews
+      DB_USERNAME: kubenews
+      DB_PASSWORD: pg123
+      DB_HOST: kube-news-db
+    ports:
+      - 8080:8080
+    depends_on:
+      # Esse container depende do container do postgres
+      # Cuidar para nao criar dependecia circular 
+      - kube-news-db
+    networks:
+      - kube-news-bridge
+
+#Volume e network usados tem que ser deckarados no compose
+#Para usar uma rede ou volume ja criado anteriormente deve passar o "external: true"
+networks:
+  kube-news-bridge:
+    name: kube-news-bridge
+    # tem que definir o driver
+    driver: bridge
+
+volumes:
+  kube-news-vol:
+    name: kube-news-vol

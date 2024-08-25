@@ -1,0 +1,15 @@
+services:
+  kube-news-db: # nome do serviço
+    image: postgres:12.7    #postgres:12.17
+    container_name: kube-news-db
+    environment:
+      POSTGRES_PASSWORD: pg123
+      POSTGRES_USER: kubenews
+      POSTGRES_DB: kubenews
+    ports:
+      - 5432:5432
+    networks:
+      - kube-news-bridge
+    volumes:
+    # ./kube-news-vol:/var/lib/postgresql/data se fizer assim vai ser ind mount e vai criar um diretorio
+      - kube-news-vol:/var/lib/postgresql/data

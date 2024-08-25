@@ -1,0 +1,25 @@
+services:
+  kube-news-db :
+    extends:
+      file: ./kube-news-db.compose.yaml
+      service: kube-news-db 
+      #podemos redefinir as declaraçoes aqui como a imgem...
+      profile: # Definimos que esse serviço vai ser criado em dev  e homolog
+        - dev
+        - homolog
+include: # Atentar para que fique nessa identaçao  se nao da erro
+  - ./kube-news-app.compose.yaml
+
+
+
+#Volume e network usados tem que ser deckarados no compose
+#Para usar uma rede ou volume ja criado anteriormente deve passar o "external: true"
+networks:
+  kube-news-bridge:
+    name: kube-news-bridge
+    # tem que definir o driver
+    driver: bridge
+
+volumes:
+  kube-news-vol:
+    name: kube-news-vol
